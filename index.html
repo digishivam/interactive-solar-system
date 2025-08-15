@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Solar System</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      background: radial-gradient(circle, #222 60%, #000 100%);
+      color: white;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    .solar-system {
+      position: relative;
+      width: 700px;
+      height: 700px;
+      margin: 40px auto;
+      border-radius: 50%;
+    }
+    .sun {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px; height: 100px;
+      background: radial-gradient(circle, #ffd700 70%, #ff8c00);
+      border-radius: 50%;
+      box-shadow: 0 0 60px 20px #ffd700;
+      z-index: 2;
+    }
+    .planet-orbit {
+      position: absolute;
+      top: 50%; left: 50%;
+      border: 1px dotted rgba(255,255,255,0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .planet {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 28px; height: 28px;
+      transform-origin: -115px center;
+      cursor: pointer;
+      z-index: 3;
+      transition: box-shadow 0.2s;
+    }
+    .planet:hover, .planet.active {
+      box-shadow: 0 0 15px 5px #7cf;
+      z-index: 10;
+    }
+    /* Colors per planet */
+    .mercury { background: #aaa; }
+    .venus   { background: #e0c074; }
+    .earth   { background: #2986f8; }
+    .mars    { background: #f15d22; }
+    .jupiter { background: #d1b080; }
+    .saturn  { background: #eed98f; }
+    .uranus  { background: #83e1f7; }
+    .neptune { background: #417ede; }
+    /* Orbit radii and animation speeds */
+    .orbit1 { width: 140px; height: 140px; }
+    .orbit2 { width: 180px; height: 180px; }
+    .orbit3 { width: 230px; height: 230px; }
+    .orbit4 { width: 300px; height: 300px; }
+    .orbit5 { width: 375px; height: 375px; }
+    .orbit6 { width: 440px; height: 440px; }
+    .orbit7 { width: 505px; height: 505px; }
+    .orbit8 { width: 565px; height: 565px; }
+    /* Animation for orbiting */
+    .planet.mercury { animation: orbit1 2s linear infinite;   }
+    .planet.venus   { animation: orbit2 4s linear infinite;   }
+    .planet.earth   { animation: orbit3 6s linear infinite;   }
+    .planet.mars    { animation: orbit4 8s linear infinite;   }
+    .planet.jupiter { animation: orbit5 10s linear infinite;  }
+    .planet.saturn  { animation: orbit6 12s linear infinite;  }
+    .planet.uranus  { animation: orbit7 14s linear infinite;  }
+    .planet.neptune { animation: orbit8 16s linear infinite;  }
+    @keyframes orbit1 { to { transform: rotate(360deg) translate(70px, -14px); } }
+    @keyframes orbit2 { to { transform: rotate(360deg) translate(90px, -14px); } }
+    @keyframes orbit3 { to { transform: rotate(360deg) translate(115px, -14px); } }
+    @keyframes orbit4 { to { transform: rotate(360deg) translate(150px, -14px); } }
+    @keyframes orbit5 { to { transform: rotate(360deg) translate(188px, -14px); } }
+    @keyframes orbit6 { to { transform: rotate(360deg) translate(220px, -14px); } }
+    @keyframes orbit7 { to { transform: rotate(360deg) translate(253px, -14px); } }
+    @keyframes orbit8 { to { transform: rotate(360deg) translate(282px, -14px); } }
+    /* Info popup styling */
+    .planet-info {
+      position: absolute;
+      left: 120%; top: 0;
+      min-width: 200px;
+      width: max-content;
+      padding: 18px 14px;
+      border-radius: 8px;
+      background: rgba(0,15,50,0.97);
+      color: #fff;
+      z-index: 12;
+      box-shadow: 0 0 15px 2px #2986f8;
+      display: none;
+    }
+    .planet.active .planet-info { display: block; }
+    @media (max-width: 800px) {
+      .solar-system { 
+        width: 98vw; height: 60vw; min-width:300px; min-height:300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+    <div class="solar-system">
+      <div class="sun"></div>
+      <!-- Orbits -->
+      <div class="planet-orbit orbit1"></div>
+      <div class="planet-orbit orbit2"></div>
+      <div class="planet-orbit orbit3"></div>
+      <div class="planet-orbit orbit4"></div>
+      <div class="planet-orbit orbit5"></div>
+      <div class="planet-orbit orbit6"></div>
+      <div class="planet-orbit orbit7"></div>
+      <div class="planet-orbit orbit8"></div>
+      <!-- Planets -->
+      <div class="planet mercury" tabindex="0">
+        <div class="planet-info">
+          <h5>Mercury</h5>
+          <p>Closest planet to the Sun.<br>
+           Diameter: 4,879km<br>
+           No moons.
+          </p>
+        </div>
+      </div>
+      <div class="planet venus" tabindex="0">
+        <div class="planet-info">
+          <h5>Venus</h5>
+          <p>Hottest planet.<br>
+           Diameter: 12,104km<br>
+           No moons.
+          </p>
+        </div>
+      </div>
+      <div class="planet earth" tabindex="0">
+        <div class="planet-info">
+          <h5>Earth</h5>
+          <p>Our planet.<br>
+           Diameter: 12,742km<br>
+           1 moon.
+          </p>
+        </div>
+      </div>
+      <div class="planet mars" tabindex="0">
+        <div class="planet-info">
+          <h5>Mars</h5>
+          <p>Known as the Red Planet.<br>
+           Diameter: 6,779km<br>
+           2 moons.
+          </p>
+        </div>
+      </div>
+      <div class="planet jupiter" tabindex="0">
+        <div class="planet-info">
+          <h5>Jupiter</h5>
+          <p>Largest planet.<br>
+           Diameter: 139,820km<br>
+           80+ moons.
+          </p>
+        </div>
+      </div>
+      <div class="planet saturn" tabindex="0">
+        <div class="planet-info">
+          <h5>Saturn</h5>
+          <p>Has stunning rings.<br>
+           Diameter: 116,460km<br>
+           80+ moons.
+          </p>
+        </div>
+      </div>
+      <div class="planet uranus" tabindex="0">
+        <div class="planet-info">
+          <h5>Uranus</h5>
+          <p>Rotates on its side.<br>
+           Diameter: 50,724km<br>
+           27 moons.
+          </p>
+        </div>
+      </div>
+      <div class="planet neptune" tabindex="0">
+        <div class="planet-info">
+          <h5>Neptune</h5>
+          <p>Farthest from the Sun.<br>
+           Diameter: 49,244km<br>
+           14 moons.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Popups: show info on click, hide others
+    document.querySelectorAll('.planet').forEach(p => {
+      p.addEventListener('click', function(e) {
+        document.querySelectorAll('.planet').forEach(o => { o.classList.remove('active') });
+        this.classList.add('active');
+        e.stopPropagation();
+      });
+      p.addEventListener('blur', function(e) {
+        this.classList.remove('active');
+      });
+    });
+    // Hide popup if user clicks elsewhere
+    document.body.addEventListener('click', function() {
+      document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
+    });
+  </script>
+</body>
+</html>
